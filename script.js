@@ -3,12 +3,12 @@ const dpi = window.devicePixelRatio;
 canvas.width = canvas.width * dpi;
 canvas.height = canvas.height * dpi;
 const ctx = canvas.getContext('2d');
+ctx.lineWidth = 2 * dpi;
 ctx.lineCap = 'round';
+ctx.strokeStyle = "#000000";
 let drawing = false;
 let paths = [];
 let currentPath = {};
-let currentColor = "#000000";
-let currentSize = 2 * dpi;
 let eraserMode = false;
 
 canvas.addEventListener('contextmenu', (e) => { e.preventDefault(); e.stopPropagation(); });
@@ -27,9 +27,7 @@ function drawStart(e) {
     drawing = true;
     const x0 = e.offsetX * dpi;
     const y0 = e.offsetY * dpi;
-    currentPath = {points: [{x0, y0}], color: currentColor, size: currentSize, eraser: eraserMode};
-    ctx.lineWidth = currentPath.size;
-    ctx.strokeStyle = currentPath.color;
+    currentPath = {points: [{x0, y0}], color: ctx.strokeStyle, size: ctx.lineWidth, eraser: eraserMode};
     ctx.globalCompositeOperation = currentPath.eraser ? 'destination-out' : 'source-over';
     draw(e);
 }
@@ -54,12 +52,12 @@ function drawEnd() {
 }
 
 function changeColor(color) {
-    currentColor = color;
+    ctx.strokeStyle = color;
     eraserMode = false;
 }
 
 function changeSize(size) {
-    currentSize = size * dpi;
+    ctx.lineWidth = size * dpi;
 }
 
 function toggleEraser() {
