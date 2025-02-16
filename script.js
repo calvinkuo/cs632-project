@@ -1,89 +1,80 @@
-/**
- * @type {HTMLCanvasElement}
- */
-const whiteboard = document.getElementById("whiteboard");
-const dpi = window.devicePixelRatio;
-whiteboard.width = 1920 * dpi; // TODO: adapt to screen size
-whiteboard.height = 1080 * dpi; // TODO: adapt to screen size
+const canvas = document.getElementById('whiteboard');
+const ctx = canvas.getContext('2d');
+let drawing = false;
+let paths = [];
+let currentPath = [];
+let currentColor = "#000000";
+let currentSize = 2;
+let eraserMode = false;
 
-const ctx = whiteboard.getContext("2d");
-ctx.clearRect(0, 0, whiteboard.width, whiteboard.height);
-ctx.strokeStyle = "blue"; // TODO: add UI to change color
-ctx.lineWidth = dpi * 10; // TODO: add UI to change size
-ctx.lineCap = "round";
+canvas.addEventListener('mousedown', (e) => {
+    drawing = true;
+    currentPath = [];
+    draw(e);
+});
 
-let isDrawing = false;
-let isEnter = false;
-let oldX = 0;
-let oldY = 0;
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', () => {
+    drawing = false;
+    paths.push([...currentPath]);
+});
+canvas.addEventListener('mouseleave', () => drawing = false);
 
-/**
- * @param {number} clientX
- * @param {number} clientY
- * @returns {[number, number]}
- */
-function convertCoords(clientX, clientY) {
-  const boundingRect = whiteboard.getBoundingClientRect();
-  const x = (clientX - boundingRect.x) * whiteboard.width / boundingRect.width;
-  const y = (clientY - boundingRect.y) * whiteboard.height / boundingRect.height;
-  return [x, y];
+function draw(e) {
+    if (!drawing) return;
+    const x = e.offsetX;
+    const y = e.offsetY;
+    currentPath.push({x, y, color: currentColor, size: currentSize, eraser: eraserMode});
+    ctx.lineWidth = currentSize;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = eraserMode ? "#FFFFFF" : currentColor;
+    ctx.beginPath();
+    ctx.moveTo(currentPath.length > 1 ? currentPath[currentPath.length - 2].x : x, currentPath.length > 1 ? currentPath[currentPath.length - 2].y : y);
+    ctx.lineTo(x, y);
+    ctx.stroke();
 }
 
-/**
- * @param {number} x0
- * @param {number} y0
- * @param {number} x1
- * @param {number} y1
- */
-function helperLine(x0, y0, x1, y1) {
-  ctx.beginPath();
-  ctx.moveTo(x0, y0);
-  ctx.lineTo(x1, y1);
-  ctx.stroke();
+function changeColor(color) {
+    currentColor = color;
+    eraserMode = false;
 }
 
-/**
- * @param {MouseEvent} ev
- * @returns {boolean}
- */
-function leftClick(ev) {
-  return Boolean(ev.buttons & 1);
+function changeSize(size) {
+    currentSize = size;
 }
 
-/**
- * @param {MouseEvent} ev
- */
-function drawStart(ev) {
-  if (leftClick(ev)) {
-    isDrawing = true;
-    [oldX, oldY] = convertCoords(ev.clientX, ev.clientY);
-  }
+function toggleEraser() {
+    eraserMode = !eraserMode;
 }
 
-/**
- * @param {MouseEvent} ev
- */
-function drawEnd(ev) {
-  if (isDrawing) {
-    const [newX, newY] = convertCoords(ev.clientX, ev.clientY);
-    helperLine(oldX, oldY, newX, newY);
-  }
-  if (!leftClick(ev)) {
-    isDrawing = false;
-  }
+function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    paths = [];
 }
 
-/**
- * @param {MouseEvent} ev
- */
-function draw(ev) {
-  if (isDrawing && leftClick(ev)) {
-    const [newX, newY] = convertCoords(ev.clientX, ev.clientY);
-    helperLine(oldX, oldY, newX, newY);
-    [oldX, oldY] = [newX, newY];
-  }
+function undo() {
+    if (paths.length > 0) {
+        paths.pop();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        paths.forEach(path => {
+            ctx.beginPath();
+            path.forEach((point, index) => {
+                ctx.lineWidth = point.size;
+                ctx.strokeStyle = point.eraser ? "#FFFFFF" : point.color;
+                if (index === 0) {
+                    ctx.moveTo(point.x, point.y);
+                } else {
+                    ctx.lineTo(point.x, point.y);
+                    ctx.stroke();
+                }
+            });
+        });
+    }
 }
 
-window.addEventListener("mousedown", drawStart);
-window.addEventListener("mouseup", drawEnd);
-window.addEventListener("mousemove", draw);
+function saveCanvas() {
+    const link = document.createElement('a');
+    link.download = 'whiteboard.png';
+    link.href = canvas.toDataURL();
+    link.click();
+}
