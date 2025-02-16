@@ -1,13 +1,21 @@
 body {
-  display: grid;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  background: black;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    background: black;
+}
+#toolbar {
+    margin-bottom: 10px;
+}
+canvas {
+    border: 5px solid rgb(0, 30, 255);
+    cursor: crosshair;
+    background: white;
 }
 
-canvas {
-  max-width: 100vw;
-  max-height: 100vh;
-  background: white;
+.App_title{
+    color: azure;
 }
