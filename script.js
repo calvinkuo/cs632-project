@@ -1,37 +1,56 @@
 const canvas = document.getElementById('whiteboard');
+const dpi = window.devicePixelRatio;
+canvas.width = canvas.width * dpi;
+canvas.height = canvas.height * dpi;
 const ctx = canvas.getContext('2d');
+ctx.lineCap = 'round';
 let drawing = false;
 let paths = [];
-let currentPath = [];
+let currentPath = {};
 let currentColor = "#000000";
-let currentSize = 2;
+let currentSize = 2 * dpi;
 let eraserMode = false;
 
-canvas.addEventListener('mousedown', (e) => {
-    drawing = true;
-    currentPath = [];
-    draw(e);
-});
+canvas.addEventListener('contextmenu', (e) => { e.preventDefault(); e.stopPropagation(); });
+canvas.addEventListener('mousedown', (e) => { if (leftClick(e)) drawStart(e); });
+canvas.addEventListener('mousemove', (e) => { if (leftClick(e)) draw(e); });
+canvas.addEventListener('mouseup', (e) => { if (!leftClick(e)) drawEnd(); });
+canvas.addEventListener('mouseleave', (e) => { draw(e); drawEnd(); });
 
-canvas.addEventListener('mousemove', draw);
-canvas.addEventListener('mouseup', () => {
-    drawing = false;
-    paths.push([...currentPath]);
-});
-canvas.addEventListener('mouseleave', () => drawing = false);
+// Check specifically for left click, and not middle click or right click
+function leftClick(e) {
+    return Boolean(e.buttons & 1);
+}
+
+function drawStart(e) {
+    if (drawing) return;
+    drawing = true;
+    const x0 = e.offsetX * dpi;
+    const y0 = e.offsetY * dpi;
+    currentPath = {points: [{x0, y0}], color: currentColor, size: currentSize, eraser: eraserMode};
+    ctx.lineWidth = currentPath.size;
+    ctx.strokeStyle = currentPath.color;
+    ctx.globalCompositeOperation = currentPath.eraser ? 'destination-out' : 'source-over';
+    draw(e);
+}
 
 function draw(e) {
     if (!drawing) return;
-    const x = e.offsetX;
-    const y = e.offsetY;
-    currentPath.push({x, y, color: currentColor, size: currentSize, eraser: eraserMode});
-    ctx.lineWidth = currentSize;
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = eraserMode ? "#FFFFFF" : currentColor;
+    const x0 = currentPath.points[currentPath.points.length - 1].x;
+    const y0 = currentPath.points[currentPath.points.length - 1].y;
+    const x = e.offsetX * dpi;
+    const y = e.offsetY * dpi;
+    currentPath.points.push({x, y});
     ctx.beginPath();
-    ctx.moveTo(currentPath.length > 1 ? currentPath[currentPath.length - 2].x : x, currentPath.length > 1 ? currentPath[currentPath.length - 2].y : y);
+    ctx.moveTo(x0, y0);
     ctx.lineTo(x, y);
     ctx.stroke();
+}
+
+function drawEnd() {
+    if (!drawing) return;
+    drawing = false;
+    paths.push(currentPath);
 }
 
 function changeColor(color) {
@@ -40,7 +59,7 @@ function changeColor(color) {
 }
 
 function changeSize(size) {
-    currentSize = size;
+    currentSize = size * dpi;
 }
 
 function toggleEraser() {
@@ -57,17 +76,13 @@ function undo() {
         paths.pop();
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         paths.forEach(path => {
+            ctx.lineWidth = path.size;
+            ctx.strokeStyle = path.color;
+            ctx.globalCompositeOperation = path.eraser ? 'destination-out' : 'source-over';
             ctx.beginPath();
-            path.forEach((point, index) => {
-                ctx.lineWidth = point.size;
-                ctx.strokeStyle = point.eraser ? "#FFFFFF" : point.color;
-                if (index === 0) {
-                    ctx.moveTo(point.x, point.y);
-                } else {
-                    ctx.lineTo(point.x, point.y);
-                    ctx.stroke();
-                }
-            });
+            ctx.moveTo(path.points[0].x, path.points[0].y)
+            path.points.forEach((point) => ctx.lineTo(point.x, point.y));
+            ctx.stroke();
         });
     }
 }
