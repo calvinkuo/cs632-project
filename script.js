@@ -22,7 +22,7 @@ fixCanvasSize();
 ctx.lineCap = 'round';
 ctx.strokeStyle = "#000000";
 let drawing = false;
-let paths = [];
+let undoStack = [];
 let redoStack = [];
 let currentPath = {};
 let eraserMode = false;
@@ -45,7 +45,7 @@ function getCoordinates(e) {
     let x, y;
 
     if (e.touches) {
-        e = e.touches[0]; 
+        e = e.touches[0];
     }
 
     x = (e.clientX - rect.left) * (canvas.width / rect.width) / dpi;
@@ -77,7 +77,7 @@ function draw(e) {
 function stopDrawing() {
     if (!drawing) return;
     drawing = false;
-    paths.push(currentPath);
+    undoStack.push(currentPath);
     redoStack = [];
 }
 
@@ -103,39 +103,41 @@ function toggleEraser() {
 }
 
 function clearCanvas() {
-    const confirmClear = confirm("Are you sure you want to clear the canvas? This action cannot be undone.");
-    if (!confirmClear) return;
-    
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    paths = [];
+    undoStack.push({ action: 'clear' });
     redoStack = [];
 }
 
 
 function undo() {
-    if (paths.length > 0) {
-        redoStack.push(paths.pop());
+    if (undoStack.length > 0) {
+        redoStack.push(undoStack.pop());
         redraw();
     }
 }
 
 function redo() {
     if (redoStack.length > 0) {
-        paths.push(redoStack.pop());
+        undoStack.push(redoStack.pop());
         redraw();
     }
 }
 
 function redraw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    paths.forEach(path => {
-        ctx.lineWidth = path.size;
-        ctx.strokeStyle = path.color;
-        ctx.globalCompositeOperation = path.eraser ? 'destination-out' : 'source-over';
-        ctx.beginPath();
-        ctx.moveTo(path.points[0].x, path.points[0].y);
-        path.points.forEach((point) => ctx.lineTo(point.x, point.y));
-        ctx.stroke();
+    undoStack.forEach(path => {
+        if (path.action === 'clear') {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        else {
+            ctx.lineWidth = path.size;
+            ctx.strokeStyle = path.color;
+            ctx.globalCompositeOperation = path.eraser ? 'destination-out' : 'source-over';
+            ctx.beginPath();
+            ctx.moveTo(path.points[0].x, path.points[0].y);
+            path.points.forEach((point) => ctx.lineTo(point.x, point.y));
+            ctx.stroke();
+        }
     });
 }
 
