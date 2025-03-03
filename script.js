@@ -26,6 +26,8 @@ let undoStack = [];
 let redoStack = [];
 let currentPath = {};
 let eraserMode = false;
+let brushWidth = 2;
+let eraserWidth = 2;
 
 
 canvas.addEventListener('contextmenu', (e) => { e.preventDefault(); e.stopPropagation(); });
@@ -54,13 +56,25 @@ function getCoordinates(e) {
     return { x, y };
 }
 
+function updateUndoRedoButtons() {
+    document.getElementById('clear').toggleAttribute('disabled', undoStack.length === 0 || undoStack[undoStack.length - 1].action === 'clear')
+    document.getElementById('undo').toggleAttribute('disabled', undoStack.length === 0);
+    document.getElementById('redo').toggleAttribute('disabled', redoStack.length === 0);
+}
+
+updateUndoRedoButtons();
+
 function startDrawing(e) {
     if (drawing) return;
     drawing = true;
     const { x, y } = getCoordinates(e);
-    currentPath = { points: [{ x, y }], color: ctx.strokeStyle, size: ctx.lineWidth, eraser: eraserMode };
+    ctx.lineWidth = eraserMode ? eraserWidth : brushWidth;
     ctx.globalCompositeOperation = eraserMode ? 'destination-out' : 'source-over';
+    currentPath = { points: [{ x, y }], color: ctx.strokeStyle, size: ctx.lineWidth, eraser: eraserMode };
     draw(e);
+
+    e.preventDefault();
+    e.stopPropagation();
 }
 
 function draw(e) {
@@ -72,47 +86,51 @@ function draw(e) {
     ctx.moveTo(lastPoint.x, lastPoint.y);
     ctx.lineTo(x, y);
     ctx.stroke();
+
+    e.preventDefault();
+    e.stopPropagation();
 }
 
-function stopDrawing() {
+function stopDrawing(e) {
     if (!drawing) return;
     drawing = false;
     undoStack.push(currentPath);
     redoStack = [];
+    updateUndoRedoButtons();
+
+    e.preventDefault();
+    e.stopPropagation();
 }
 
 function changeColor(color) {
     ctx.strokeStyle = color;
-    eraserMode = false;
-    document.getElementById('eraserBtn').classList.remove('active');
 }
 
 function changeSize(size) {
-    ctx.lineWidth = size;
+    brushWidth = size;
 }
 
 function changeEraserSize(size) {
-    if (eraserMode) {
-        ctx.lineWidth = size;
-    }
+    eraserWidth = size;
 }
 
-function toggleEraser() {
-    eraserMode = !eraserMode;
-    document.getElementById('eraserBtn').classList.toggle('active', eraserMode);
+function toggleEraser(value = !eraserMode) {
+    eraserMode = value;
+    document.getElementById('eraserBtn').classList.toggle('toggled', value);
 }
 
 function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     undoStack.push({ action: 'clear' });
     redoStack = [];
+    updateUndoRedoButtons();
 }
-
 
 function undo() {
     if (undoStack.length > 0) {
         redoStack.push(undoStack.pop());
         redraw();
+        updateUndoRedoButtons();
     }
 }
 
@@ -120,24 +138,33 @@ function redo() {
     if (redoStack.length > 0) {
         undoStack.push(redoStack.pop());
         redraw();
+        updateUndoRedoButtons();
     }
 }
 
-function redraw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    undoStack.forEach(path => {
-        if (path.action === 'clear') {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+function redraw(clear = true) {
+    if (clear)
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Find index of last clear action
+    let lastClear = -1;
+    for (let index = undoStack.length - 1; index >= 0; index--) {
+        if (undoStack[index].action === 'clear') {
+            lastClear = index;
+            break;
         }
-        else {
-            ctx.lineWidth = path.size;
-            ctx.strokeStyle = path.color;
-            ctx.globalCompositeOperation = path.eraser ? 'destination-out' : 'source-over';
-            ctx.beginPath();
-            ctx.moveTo(path.points[0].x, path.points[0].y);
-            path.points.forEach((point) => ctx.lineTo(point.x, point.y));
-            ctx.stroke();
-        }
+    }
+
+    undoStack.forEach((path, index) => {
+        if (index <= lastClear)
+            return;
+        ctx.lineWidth = path.size;
+        ctx.strokeStyle = path.color;
+        ctx.globalCompositeOperation = path.eraser ? 'destination-out' : 'source-over';
+        ctx.beginPath();
+        ctx.moveTo(path.points[0].x, path.points[0].y);
+        path.points.forEach((point) => ctx.lineTo(point.x, point.y));
+        ctx.stroke();
     });
 }
 
@@ -146,8 +173,21 @@ function saveCanvas() {
     const confirmSave = confirm(`Do you want to save the drawing as a ${format.toUpperCase()} file?`);
     if (!confirmSave) return;
 
+    if (format === 'jpeg') {
+        // JPEG does not support transparency
+        const saved = ctx.fillStyle;
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = saved;
+        redraw(false);
+    }
+
     const link = document.createElement('a');
     link.download = `whiteboard.${format}`;
     link.href = canvas.toDataURL(`image/${format}`);
     link.click();
+
+    if (format === 'jpeg') {
+        redraw();
+    }
 }

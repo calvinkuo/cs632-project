@@ -6,6 +6,7 @@ body {
     justify-content: center;
     margin: 0;
     background: black;
+    color: white;
 }
 
 #toolbar {
@@ -18,12 +19,9 @@ body {
     border-radius: 5px;
 }
 
-label {
-    color: white;
-}
-
 button {
     background-color: white;
+    color: black;
     border: none;
     cursor: pointer;
     padding: 8px;
@@ -31,13 +29,26 @@ button {
     font-size: 16px;
 }
 
-button i {
+button:active:not(:disabled) {
+    background-color: lightgray;
+}
+
+button:disabled {
+    opacity: 0.5;
+}
+
+button .fas {
     font-size: 20px;
 }
 
-button.active {
+button.toggled {
     background-color: red;
     color: white;
+}
+
+button.toggled:active {
+    background-color: pink;
+    color: black;
 }
 
 canvas {
