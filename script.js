@@ -7,9 +7,6 @@ function fixCanvasSize() {
     const styleWidth = 800;
     const styleHeight = 500;
 
-    canvas.style.width = `${styleWidth}px`;
-    canvas.style.height = `${styleHeight}px`;
-
     canvas.width = styleWidth * dpi;
     canvas.height = styleHeight * dpi;
 

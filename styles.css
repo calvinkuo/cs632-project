@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     text-align: center;
     font-family: Arial, sans-serif;
@@ -17,6 +21,10 @@ body {
     background: #222;
     padding: 10px;
     border-radius: 5px;
+    max-width: 100%;
+    flex-wrap: wrap;
+    place-items: center;
+    place-content: center;
 }
 
 button {
@@ -56,7 +64,8 @@ canvas {
     cursor: crosshair;
     background: white;
     width: 800px;
-    height: 500px;
+    max-width: 100%;
+    aspect-ratio: 8 / 5;
 }
 
 .App_title {
@@ -67,4 +76,6 @@ canvas {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 10px;
+    width: 100%;
 }

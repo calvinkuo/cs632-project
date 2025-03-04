@@ -10,9 +10,9 @@
 <body>
     <h1 class="App_title">Whiteboard Web Application</h1>
     <div id="toolbar">
-        <button id="clear" onclick="clearCanvas()" title="Clear the whiteboard"><span class="fas fa-trash"></span> Clear</button>
-        <button id="undo" onclick="undo()" title="Undo the last action"><span class="fas fa-undo"></span> Undo</button>
-        <button id="redo" onclick="redo()" title="Redo the last action"><span class="fas fa-redo"></span> Redo</button>
+        <button id="clear" onclick="clearCanvas()" title="Clear the whiteboard" disabled><span class="fas fa-trash"></span> Clear</button>
+        <button id="undo" onclick="undo()" title="Undo the last action" disabled><span class="fas fa-undo"></span> Undo</button>
+        <button id="redo" onclick="redo()" title="Redo the last action" disabled><span class="fas fa-redo"></span> Redo</button>
         <div title="Click to pick the brush color" ><label for="colorPicker">Brush Color:</label> <input type="color" id="colorPicker" onfocus="toggleEraser(false)" onchange="changeColor(this.value)"></div>
         <div title="Scroll to change the brush size"><label for="sizePicker">Brush Size:</label> <input type="range" id="sizePicker" min="1" max="10" value="2" onfocus="toggleEraser(false)" onchange="changeSize(this.value)"></div>
         <button onclick="toggleEraser()" id="eraserBtn" title="Erase part of the whiteboard"><span class="fas fa-eraser"></span> Eraser</button>
