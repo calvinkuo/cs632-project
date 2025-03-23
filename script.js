@@ -170,20 +170,6 @@ function redraw(clear = true) {
 function saveCanvas() {
     const format = document.getElementById('fileFormat').value;
 
-    const filename = `whiteboard.${format}`;
-    const mimeType = `image/${format}`;
-    if ((/iPad|iPhone|iPod/.test(navigator.userAgent) || /Android/i.test(navigator.userAgent)) && 'share' in navigator) {
-        canvas.toBlob((blob) => {
-            navigator.share({
-                title: "Whiteboard",
-                files: [new File([blob], filename, { type: mimeType })],
-            });
-        }, mimeType);
-    }
-
-    const confirmSave = confirm(`Do you want to save the drawing as a ${format.toUpperCase()} file?`);
-    if (!confirmSave) return;
-
     if (format === 'jpeg') {
         // JPEG does not support transparency
         const saved = ctx.fillStyle;
@@ -192,6 +178,25 @@ function saveCanvas() {
         ctx.fillStyle = saved;
         redraw(false);
     }
+
+    const filename = `whiteboard.${format}`;
+    const mimeType = `image/${format}`;
+    if ((/iPad|iPhone|iPod/.test(navigator.userAgent) || /Android/i.test(navigator.userAgent)) && 'share' in navigator) {
+        canvas.toBlob((blob) => {
+            navigator.share({
+                title: "Whiteboard",
+                files: [new File([blob], filename, { type: mimeType })],
+            }).then(() => {
+                if (format === 'jpeg') {
+                    redraw();
+                }
+            });
+        }, mimeType);
+        return;
+    }
+
+    const confirmSave = confirm(`Do you want to save the drawing as a ${format.toUpperCase()} file?`);
+    if (!confirmSave) return;
 
     const link = document.createElement('a');
     link.download = filename;
