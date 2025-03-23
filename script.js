@@ -169,6 +169,19 @@ function redraw(clear = true) {
 
 function saveCanvas() {
     const format = document.getElementById('fileFormat').value;
+
+    const filename = `whiteboard.${format}`;
+    const mimeType = `image/${format}`;
+    if ((/iPad|iPhone|iPod/.test(navigator.userAgent) || /Android/i.test(navigator.userAgent)) && 'share' in navigator) {
+        canvas.toBlob((blob) => {
+            navigator.share({
+                title: "Whiteboard",
+                files: [new File([blob], filename, { type: mimeType })],
+            });
+        }, mimeType);
+        return;
+    }
+
     const confirmSave = confirm(`Do you want to save the drawing as a ${format.toUpperCase()} file?`);
     if (!confirmSave) return;
 
@@ -182,8 +195,8 @@ function saveCanvas() {
     }
 
     const link = document.createElement('a');
-    link.download = `whiteboard.${format}`;
-    link.href = canvas.toDataURL(`image/${format}`);
+    link.download = filename;
+    link.href = canvas.toDataURL(mimeType);
     link.click();
 
     if (format === 'jpeg') {
