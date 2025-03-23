@@ -179,7 +179,6 @@ function saveCanvas() {
                 files: [new File([blob], filename, { type: mimeType })],
             });
         }, mimeType);
-        return;
     }
 
     const confirmSave = confirm(`Do you want to save the drawing as a ${format.toUpperCase()} file?`);
@@ -202,4 +201,8 @@ function saveCanvas() {
     if (format === 'jpeg') {
         redraw();
     }
+
+    setTimeout(() => {
+        window.alert("The file has been saved.");
+    }, 500);
 }
