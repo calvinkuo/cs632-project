@@ -117,6 +117,8 @@ function toggleEraser(value = !eraserMode) {
 }
 
 function clearCanvas() {
+    const confirmClear = confirm("Are you sure you want to clear the canvas? (If you change your mind, you can undo clearing the canvas later.)");
+    if (!confirmClear) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     undoStack.push({ action: 'clear' });
     redoStack = [];
