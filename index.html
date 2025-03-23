@@ -9,14 +9,19 @@
 </head>
 <body>
     <h1 class="App_title">Whiteboard Web Application</h1>
-    <div id="toolbar">
+    <div id="toolbar" class="brushView">
         <button id="clear" onclick="clearCanvas()" title="Clear the whiteboard" disabled><span class="fas fa-trash"></span> Clear</button>
         <button id="undo" onclick="undo()" title="Undo the last action" disabled><span class="fas fa-undo"></span> Undo</button>
         <button id="redo" onclick="redo()" title="Redo the last action" disabled><span class="fas fa-redo"></span> Redo</button>
-        <div title="Click to pick the brush color" ><label for="colorPicker">Brush Color:</label> <input type="color" id="colorPicker" onfocus="toggleEraser(false)" onchange="changeColor(this.value)"></div>
-        <div title="Scroll to change the brush size"><label for="sizePicker">Brush Size:</label> <input type="range" id="sizePicker" min="1" max="10" value="2" onfocus="toggleEraser(false)" onchange="changeSize(this.value)"></div>
-        <button onclick="toggleEraser()" id="eraserBtn" title="Erase part of the whiteboard"><span class="fas fa-eraser"></span> Eraser</button>
-        <div title="Scroll to change the eraser size"><label for="eraserSizePicker">Eraser Size:</label> <input type="range" id="eraserSizePicker" min="1" max="10" value="2" onfocus="toggleEraser(true)" onchange="changeEraserSize(this.value)"></div>
+        <div class="toolbar-sub brush">
+            <button onclick="toggleEraser()" title="Switch between brush and eraser"><span class="fas fa-brush"></span> Brush</button>
+            <div title="Click to pick the brush color" ><label for="colorPicker">Brush Color:</label> <input type="color" id="colorPicker" onfocus="toggleEraser(false)" onchange="changeColor(this.value)"></div>
+            <div title="Scroll to change the brush size"><label for="sizePicker">Brush Size:</label> <input type="range" id="sizePicker" min="1" max="10" value="2" onfocus="toggleEraser(false)" onchange="changeSize(this.value)"></div>
+        </div>
+        <div class="toolbar-sub eraser">
+            <button onclick="toggleEraser()" title="Switch between brush and eraser"><span class="fas fa-eraser"></span> Eraser</button>
+            <div title="Scroll to change the eraser size"><label for="eraserSizePicker">Eraser Size:</label> <input type="range" id="eraserSizePicker" min="1" max="40" value="8" onfocus="toggleEraser(true)" onchange="changeEraserSize(this.value)"></div>
+        </div>
         <button onclick="saveCanvas()" title="Save the image as a file"><span class="fas fa-save"></span> Save</button>
         <select id="fileFormat">
             <option value="png">PNG</option>

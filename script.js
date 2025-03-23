@@ -23,8 +23,8 @@ let undoStack = [];
 let redoStack = [];
 let currentPath = {};
 let eraserMode = false;
-let brushWidth = 2;
-let eraserWidth = 2;
+let brushWidth = +document.getElementById('sizePicker').getAttribute('value');
+let eraserWidth = +document.getElementById('eraserSizePicker').getAttribute('value');
 
 
 canvas.addEventListener('contextmenu', (e) => { e.preventDefault(); e.stopPropagation(); });
@@ -113,7 +113,8 @@ function changeEraserSize(size) {
 
 function toggleEraser(value = !eraserMode) {
     eraserMode = value;
-    document.getElementById('eraserBtn').classList.toggle('toggled', value);
+    document.getElementById('toolbar').classList.toggle('brushView', !value);
+    document.getElementById('toolbar').classList.toggle('eraserView', value);
 }
 
 function clearCanvas() {

@@ -27,6 +27,20 @@ body {
     place-content: center;
 }
 
+.toolbar-sub {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    place-items: center;
+    place-content: center;
+
+}
+
+.eraserView .brush, .brushView .eraser {
+    display: none;
+}
+
 button {
     background-color: white;
     color: black;
@@ -47,16 +61,6 @@ button:disabled {
 
 button .fas {
     font-size: 20px;
-}
-
-button.toggled {
-    background-color: red;
-    color: white;
-}
-
-button.toggled:active {
-    background-color: pink;
-    color: black;
 }
 
 canvas {
