@@ -1,0 +1,81 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    background: black;
+    color: white;
+}
+
+#toolbar {
+    margin-bottom: 10px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    background: #222;
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 100%;
+    flex-wrap: wrap;
+    place-items: center;
+    place-content: center;
+}
+
+button {
+    background-color: white;
+    color: black;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    margin: 5px;
+    font-size: 16px;
+}
+
+button:active:not(:disabled) {
+    background-color: lightgray;
+}
+
+button:disabled {
+    opacity: 0.5;
+}
+
+button .fas {
+    font-size: 20px;
+}
+
+button.toggled {
+    background-color: red;
+    color: white;
+}
+
+button.toggled:active {
+    background-color: pink;
+    color: black;
+}
+
+canvas {
+    border: 5px solid rgb(0, 30, 255);
+    cursor: crosshair;
+    background: white;
+    width: 800px;
+    max-width: 100%;
+    aspect-ratio: 8 / 5;
+}
+
+.App_title {
+    color: azure;
+}
+
+.canvas-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    width: 100%;
+}
