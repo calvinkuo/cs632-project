@@ -1,11 +1,11 @@
 const canvas = document.getElementById('whiteboard');
 const ctx = canvas.getContext('2d');
 const dpi = window.devicePixelRatio || 1;
-
+let portrait = screen.orientation.type.startsWith('portrait');
 
 function fixCanvasSize() {
-    const styleWidth = 800;
-    const styleHeight = 500;
+    const styleWidth = !portrait ? 800 : 500;
+    const styleHeight = !portrait ? 500 : 800;
 
     canvas.width = styleWidth * dpi;
     canvas.height = styleHeight * dpi;
@@ -13,8 +13,13 @@ function fixCanvasSize() {
     ctx.scale(dpi, dpi);
     ctx.lineWidth = 2;
 }
-
 fixCanvasSize();
+
+screen.orientation.addEventListener('change', () => {
+    portrait = screen.orientation.type.startsWith('portrait');
+    fixCanvasSize();
+    redraw();
+});
 
 ctx.lineCap = 'round';
 ctx.strokeStyle = "#000000";
@@ -50,6 +55,12 @@ function getCoordinates(e) {
     x = (e.clientX - rect.left) * (canvas.width / rect.width) / dpi;
     y = (e.clientY - rect.top) * (canvas.height / rect.height) / dpi;
 
+    if (portrait) {
+        const oldX = x;
+        const oldY = y;
+        x = oldY;
+        y = (canvas.width / dpi) - oldX;
+    }
     return { x, y };
 }
 
@@ -80,8 +91,14 @@ function draw(e) {
     const lastPoint = currentPath.points[currentPath.points.length - 1];
     currentPath.points.push({ x, y });
     ctx.beginPath();
-    ctx.moveTo(lastPoint.x, lastPoint.y);
-    ctx.lineTo(x, y);
+    if (portrait) {
+        ctx.moveTo((canvas.width / dpi) - lastPoint.y, lastPoint.x);
+        ctx.lineTo((canvas.width / dpi) - y, x);
+    }
+    else {
+        ctx.moveTo(lastPoint.x, lastPoint.y);
+        ctx.lineTo(x, y);
+    }
     ctx.stroke();
 
     e.preventDefault();
@@ -162,8 +179,14 @@ function redraw(clear = true) {
         ctx.strokeStyle = path.color;
         ctx.globalCompositeOperation = path.eraser ? 'destination-out' : 'source-over';
         ctx.beginPath();
-        ctx.moveTo(path.points[0].x, path.points[0].y);
-        path.points.forEach((point) => ctx.lineTo(point.x, point.y));
+        if (portrait) {
+            ctx.moveTo((canvas.width / dpi) - path.points[0].y, path.points[0].x);
+            path.points.forEach((point) => ctx.lineTo((canvas.width / dpi) - point.y, point.x));
+        }
+        else {
+            ctx.moveTo(path.points[0].x, path.points[0].y);
+            path.points.forEach((point) => ctx.lineTo(point.x, point.y));
+        }
         ctx.stroke();
     });
 }
