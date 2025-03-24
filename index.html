@@ -15,7 +15,7 @@
         <button id="redo" onclick="redo()" title="Redo the last action" disabled><span class="fas fa-redo"></span> Redo</button>
         <div class="toolbar-sub brush">
             <button onclick="toggleEraser()" title="Switch between brush and eraser"><span class="fas fa-brush"></span> Brush</button>
-            <div title="Click to pick the brush color" ><label for="colorPicker">Brush Color:</label> <input type="color" id="colorPicker" onfocus="toggleEraser(false)" onchange="changeColor(this.value)"></div>
+            <div title="Click to pick the brush color" ><label for="colorPicker">Brush Color:</label> <input type="color" id="colorPicker" onfocus="toggleEraser(false)" oninput="changeColor(this.value)" onchange="changeColor(this.value)"></div>
             <div title="Scroll to change the brush size"><label for="sizePicker">Brush Size:</label> <input type="range" id="sizePicker" min="1" max="10" value="2" onfocus="toggleEraser(false)" onchange="changeSize(this.value)"></div>
         </div>
         <div class="toolbar-sub eraser">
