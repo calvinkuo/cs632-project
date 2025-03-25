@@ -4,8 +4,8 @@ const dpi = window.devicePixelRatio || 1;
 let portrait = screen.orientation.type.startsWith('portrait');
 
 function fixCanvasSize() {
-    const styleWidth = !portrait ? 800 : 500;
-    const styleHeight = !portrait ? 500 : 800;
+    const styleWidth = !portrait ? 1000 : 600;
+    const styleHeight = !portrait ? 600 : 1000;
 
     canvas.width = styleWidth * dpi;
     canvas.height = styleHeight * dpi;
@@ -135,7 +135,7 @@ function toggleEraser(value = !eraserMode) {
 }
 
 function clearCanvas() {
-    const confirmClear = confirm("Are you sure you want to clear the canvas? (If you change your mind, you can undo clearing the canvas later.)");
+    const confirmClear = confirm("Are you sure you want to clear the canvas?\n(Tip: You can undo this action with the Undo button.)");
     if (!confirmClear) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     undoStack.push({ action: 'clear' });
@@ -232,6 +232,6 @@ function saveCanvas() {
     }
 
     setTimeout(() => {
-        window.alert("The file has been saved.");
+        window.alert("The file has been saved as a ${format.toUpperCase()} file.");
     }, 500);
 }

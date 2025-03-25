@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Whiteboard</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
 </head>
 <body>
     <h1 class="App_title">Whiteboard Web Application</h1>
@@ -20,7 +20,7 @@
         </div>
         <div class="toolbar-sub eraser">
             <button onclick="toggleEraser()" title="Switch between brush and eraser"><span class="fas fa-eraser"></span> Eraser</button>
-            <div title="Scroll to change the eraser size"><label for="eraserSizePicker">Eraser Size:</label> <input type="range" id="eraserSizePicker" min="1" max="40" value="8" onfocus="toggleEraser(true)" onchange="changeEraserSize(this.value)"></div>
+            <div title="Scroll to change the eraser size"><label for="eraserSizePicker">Eraser Size:</label> <input type="range" id="eraserSizePicker" min="1" max="30" value="10" onfocus="toggleEraser(true)" onchange="changeEraserSize(this.value)"></div>
         </div>
         <button onclick="saveCanvas()" title="Save the image as a file"><span class="fas fa-save"></span> Save</button>
         <select id="fileFormat">

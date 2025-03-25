@@ -71,11 +71,12 @@ canvas {
     background: white;
     width: 800px;
     max-width: 100%;
-    aspect-ratio: 8 / 5;
+    aspect-ratio: 10 / 6;
 }
 
 .App_title {
     color: azure;
+    margin: 20px 0 10px;
 }
 
 .canvas-container {
@@ -88,6 +89,6 @@ canvas {
 
 @media (orientation: portrait) {
     canvas {
-        aspect-ratio: 5 / 8;
+        aspect-ratio: 6 / 10;
     }
 }
