@@ -11,6 +11,8 @@ function fixCanvasSize() {
     canvas.height = styleHeight * dpi;
 
     ctx.scale(dpi, dpi);
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = "#000000";
     ctx.lineWidth = 2;
 }
 fixCanvasSize();
@@ -21,8 +23,6 @@ screen.orientation.addEventListener('change', () => {
     redraw();
 });
 
-ctx.lineCap = 'round';
-ctx.strokeStyle = "#000000";
 let drawing = false;
 let undoStack = [];
 let redoStack = [];
@@ -132,6 +132,9 @@ function toggleEraser(value = !eraserMode) {
     eraserMode = value;
     document.getElementById('toolbar').classList.toggle('brushView', !value);
     document.getElementById('toolbar').classList.toggle('eraserView', value);
+    document.getElementById('eraserBtn').classList.toggle('toggled', value);
+    document.getElementById('brushStatus').innerHTML = !value ? '(Active)' : '';
+    document.getElementById('eraserStatus').innerHTML = value ? '(Active)' : '';
 }
 
 function clearCanvas() {
@@ -232,6 +235,6 @@ function saveCanvas() {
     }
 
     setTimeout(() => {
-        window.alert("The file has been saved as a ${format.toUpperCase()} file.");
+        window.alert(`The file has been saved as a ${format.toUpperCase()} file.`);
     }, 500);
 }

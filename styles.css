@@ -65,12 +65,23 @@ button .fas {
     font-size: 20px;
 }
 
+button.toggled {
+    background-color: red;
+    color: white;
+}
+
+button.toggled:active {
+    background-color: pink;
+    color: black;
+}
+
 canvas {
     border: 5px solid rgb(0, 30, 255);
     cursor: crosshair;
     background: white;
-    width: 800px;
-    max-width: 100%;
+    width: 100%;
+    height: auto;
+    max-width: 1000px;
     aspect-ratio: 10 / 6;
 }
 
