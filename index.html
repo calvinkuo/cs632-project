@@ -9,24 +9,59 @@
 </head>
 <body>
   <h1 class="App_title">Whiteboard Web Application</h1>
+
   <div id="toolbar">
-    <button onclick="clearCanvas()" title="Clear"><i class="fas fa-trash"></i> Clear</button>
-    <button onclick="undo()" title="Undo"><i class="fas fa-undo"></i> Undo</button>
-    <button onclick="redo()" title="Redo"><i class="fas fa-redo"></i> Redo</button>
-    <label>Brush Color: <input type="color" id="colorPicker" title="Pick brush color" onchange="changeColor(this.value)"></label>
-    <label>Brush Size: <input type="range" id="sizePicker" title="Change brush size" min="1" max="20" value="2" onchange="changeSize(this.value)"></label>
-    <button onclick="toggleEraser()" id="eraserBtn" title="Eraser"><i class="fas fa-eraser"></i> Eraser <span id="eraserStatus"></span></button>
-    <label>Eraser Size: <input type="range" id="eraserSizePicker" min="1" max="30" value="10" onchange="changeEraserSize(this.value)"></label>
-    <button onclick="saveCanvas()" title="Save"><i class="fas fa-save"></i> Save</button>
-    <select id="fileFormat">
-      <option value="png">PNG</option>
-      <option value="jpeg">JPEG</option>
-    </select>
+    <div class="tool-group">
+      <button onclick="clearCanvas()" title="Clear Canvas"><i class="fas fa-trash"></i> Clear</button>
+      <button onclick="undo()" title="Undo Last Action"><i class="fas fa-undo"></i> Undo</button>
+      <button onclick="redo()" title="Redo Last Action"><i class="fas fa-redo"></i> Redo</button>
+    </div>
+
+    <div class="tool-group">
+      <label for="colorPicker">Brush Color:</label>
+      <input type="color" id="colorPicker" onchange="changeColor(this.value)">
+      <div id="colorIndicator" class="indicator" title="Selected Color"></div>
+
+      <label for="sizePicker">Brush Size:</label>
+      <input type="range" id="sizePicker" min="1" max="20" value="2" onchange="changeSize(this.value)">
+      <span id="sizeIndicator" class="indicator">2px</span>
+    </div>
+
+    <div class="tool-group">
+      <button onclick="toggleEraser()" id="eraserBtn" title="Toggle Eraser"><i class="fas fa-eraser"></i> Eraser</button>
+      <label for="eraserSizePicker">Eraser Size:</label>
+      <input type="range" id="eraserSizePicker" min="1" max="30" value="10" onchange="changeEraserSize(this.value)">
+    </div>
+
+    <div class="tool-group">
+      <label for="fileFormat">Format:</label>
+      <select id="fileFormat">
+        <option value="png">PNG</option>
+        <option value="jpeg">JPEG</option>
+      </select>
+      <button onclick="saveCanvas()" title="Save your drawing"><i class="fas fa-save"></i> Save</button>
+    </div>
   </div>
 
   <div class="canvas-container">
     <canvas id="whiteboard"></canvas>
   </div>
+
+  <div id="statusBar" role="status" aria-live="polite"></div>
+
+  <div id="helpSection">
+    <details>
+      <summary>Need help?</summary>
+      <ul>
+        <li>🎨 <strong>Brush</strong>: Default tool for drawing.</li>
+        <li>🧼 <strong>Eraser</strong>: Use to erase lines (toggle off to return to brush).</li>
+        <li>🔄 <strong>Undo/Redo</strong>: Step backward or forward through your drawing actions.</li>
+        <li>🗑️ <strong>Clear</strong>: Clears everything (you can undo it too now!).</li>
+        <li>💾 <strong>Save</strong>: Saves your artwork in selected format (PNG or JPEG).</li>
+      </ul>
+    </details>
+  </div>
+
 
   <script src="script.js"></script>
 </body>
