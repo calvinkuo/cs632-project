@@ -1,36 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Whiteboard</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Whiteboard</title>
+  <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
 </head>
 <body>
-    <h1 class="App_title">Whiteboard Web Application</h1>
-    <div id="toolbar" class="brushView">
-        <button id="clear" onclick="clearCanvas()" title="Clear the whiteboard" disabled><span class="fas fa-trash"></span> Clear</button>
-        <button id="undo" onclick="undo()" title="Undo the last action" disabled><span class="fas fa-undo"></span> Undo</button>
-        <button id="redo" onclick="redo()" title="Redo the last action" disabled><span class="fas fa-redo"></span> Redo</button>
-        <button onclick="toggleEraser(false)" title="Draw on the whiteboard"><span class="fas fa-brush"></span> Brush <span id="brushStatus">(Active)</span></button>
-        <div class="toolbar-sub brush">
-            <div title="Click to pick the brush color" ><label for="colorPicker">Brush Color:</label> <input type="color" id="colorPicker" onfocus="toggleEraser(false)" oninput="changeColor(this.value)" onchange="changeColor(this.value)"></div>
-            <div title="Scroll to change the brush size"><label for="sizePicker">Brush Size:</label> <input type="range" id="sizePicker" min="1" max="10" value="2" onfocus="toggleEraser(false)" onchange="changeSize(this.value)"></div>
-        </div>
-        <button id="eraserBtn" onclick="toggleEraser()" title="Erase part of the whiteboard"><span class="fas fa-eraser"></span> Eraser <span id="eraserStatus"></span></button>
-        <div class="toolbar-sub eraser">
-            <div title="Scroll to change the eraser size"><label for="eraserSizePicker">Eraser Size:</label> <input type="range" id="eraserSizePicker" min="1" max="30" value="10" onfocus="toggleEraser(true)" onchange="changeEraserSize(this.value)"></div>
-        </div>
-        <button onclick="saveCanvas()" title="Save the image as a file"><span class="fas fa-save"></span> Save</button>
-        <select id="fileFormat">
-            <option value="png">PNG</option>
-            <option value="jpeg">JPEG</option>
-        </select>
+  <h1 class="App_title">Whiteboard Web Application</h1>
+
+  <div id="toolbar">
+    <div class="tool-group">
+      <button onclick="clearCanvas()" title="Clear Canvas"><i class="fas fa-trash"></i> Clear</button>
+      <button onclick="undo()" title="Undo Last Action"><i class="fas fa-undo"></i> Undo</button>
+      <button onclick="redo()" title="Redo Last Action"><i class="fas fa-redo"></i> Redo</button>
     </div>
-    <div class="canvas-container">
-        <canvas id="whiteboard"></canvas>
+
+    <div class="tool-group">
+      <label for="colorPicker">Brush Color:</label>
+      <input type="color" id="colorPicker" onchange="changeColor(this.value)">
+      <div id="colorIndicator" class="indicator" title="Selected Color"></div>
+
+      <label for="sizePicker">Brush Size:</label>
+      <input type="range" id="sizePicker" min="1" max="20" value="2" onchange="changeSize(this.value)">
+      <span id="sizeIndicator" class="indicator">2px</span>
     </div>
-    <script src="script.js"></script>
+
+    <div class="tool-group">
+      <button onclick="toggleEraser()" id="eraserBtn" title="Toggle Eraser"><i class="fas fa-eraser"></i> Eraser</button>
+      <label for="eraserSizePicker">Eraser Size:</label>
+      <input type="range" id="eraserSizePicker" min="1" max="30" value="10" onchange="changeEraserSize(this.value)">
+    </div>
+
+    <div class="tool-group">
+      <label for="fileFormat">Format:</label>
+      <select id="fileFormat">
+        <option value="png">PNG</option>
+        <option value="jpeg">JPEG</option>
+      </select>
+      <button onclick="saveCanvas()" title="Save your drawing"><i class="fas fa-save"></i> Save</button>
+    </div>
+  </div>
+
+  <div class="canvas-container">
+    <canvas id="whiteboard"></canvas>
+  </div>
+
+  <div id="statusBar" role="status" aria-live="polite"></div>
+
+  <div id="helpSection">
+    <details>
+      <summary>Need help?</summary>
+      <ul>
+        <li>🎨 <strong>Brush</strong>: Default tool for drawing.</li>
+        <li>🧼 <strong>Eraser</strong>: Use to erase lines (toggle off to return to brush).</li>
+        <li>🔄 <strong>Undo/Redo</strong>: Step backward or forward through your drawing actions.</li>
+        <li>🗑️ <strong>Clear</strong>: Clears everything (you can undo it too now!).</li>
+        <li>💾 <strong>Save</strong>: Saves your artwork in selected format (PNG or JPEG).</li>
+      </ul>
+    </details>
+  </div>
+
+
+  <script src="index.js"></script>
 </body>
 </html>
