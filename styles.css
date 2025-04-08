@@ -1,80 +1,132 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     text-align: center;
     font-family: Arial, sans-serif;
+    display: grid;
+    align-items: center;
+    justify-content: center;
     margin: 0;
     background: black;
-    padding: 0 10px;
-  }
-  
-  .App_title {
-    color: azure;
-    margin: 20px 0 10px;
-  }
-  
-  #toolbar {
+    color: white;
+}
+
+#toolbar {
+    clear: both;
+}
+
+.toolbar {
+    margin-bottom: 10px;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
     background: #222;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-  }
-  
-  .tool-group {
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 100%;
+    flex-wrap: wrap;
+    place-items: center;
+    place-content: center;
+}
+
+.toolbar-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    min-height: 37px;
+    width: 100%;
+}
+
+.tool-group {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     gap: 8px;
-  }
-  
-  label {
-    color: white;
-    font-size: 14px;
-  }
-  
-  button {
+    padding: 5px;
+}
+
+.eraserView .brush, .brushView .eraser {
+    display: none;
+}
+
+button {
     background-color: white;
+    color: black;
     border: none;
     cursor: pointer;
-    padding: 8px 10px;
+    padding: 8px;
     font-size: 16px;
     border-radius: 5px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  
-  button.active {
-    background-color: crimson;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+button:active:not(:disabled) {
+    background-color: lightgray;
+}
+
+button:disabled {
+    opacity: 0.5;
+}
+
+button .fas {
+    font-size: 20px;
+}
+
+button.toggled {
+    background-color: red;
     color: white;
-  }
-  
-  canvas {
+}
+
+button.toggled:active {
+    background-color: pink;
+    color: black;
+}
+
+canvas {
     border: 5px solid rgb(0, 30, 255);
     cursor: crosshair;
     background: white;
     width: 100%;
+    height: auto;
     max-width: 1000px;
-    height: 600px;
-    touch-action: none;
-  }
-  
-  .canvas-container {
+    aspect-ratio: 10 / 6;
+}
+
+.App_title {
+    color: azure;
+    margin: 20px 0 10px;
+}
+
+.canvas-container {
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  
-  .indicator {
+    padding: 10px;
+    width: 100%;
+}
+
+@media (orientation: portrait) {
+    canvas {
+        aspect-ratio: 6 / 10;
+    }
+}
+
+.indicator {
     background-color: white;
     padding: 2px 6px;
     border-radius: 4px;
+    min-height: 1.5em;
+    min-width: 1.5em;
     font-size: 14px;
     color: black;
   }
-  
+
   .help {
     margin: 20px;
     color: white;
@@ -87,34 +139,15 @@ body {
     padding: 0.5rem;
     color: #333;
   }
-  
+
   #helpSection {
+    width: 100%;
     max-width: 600px;
     margin: 1rem auto;
     padding: 1rem;
     background: #ffffff;
+    color: #000;
     border: 1px solid #ddd;
     border-radius: 6px;
     font-size: 0.95rem;
   }
-  
-  @media (max-width: 768px) {
-    #toolbar {
-      flex-direction: column;
-      align-items: stretch;
-    }
-  
-    .toolbar-group {
-      justify-content: center;
-    }
-  
-    input[type="range"] {
-      width: 100%;
-    }
-  
-    canvas {
-      width: 90vw;
-      height: 60vh;
-    }
-  }
-  
