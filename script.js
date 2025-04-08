@@ -133,6 +133,7 @@ function changeSize(size) {
 
 function changeEraserSize(size) {
     eraserWidth = size;
+    document.getElementById('eraserSizeIndicator').textContent = `${size}px`;
 }
 
 function toggleEraser(value = !eraserMode) {
@@ -140,8 +141,6 @@ function toggleEraser(value = !eraserMode) {
     document.getElementById('toolbar').classList.toggle('brushView', !value);
     document.getElementById('toolbar').classList.toggle('eraserView', value);
     document.getElementById('eraserBtn').classList.toggle('toggled', value);
-    document.getElementById('brushStatus').innerHTML = !value ? '(Active)' : '';
-    document.getElementById('eraserStatus').innerHTML = value ? '(Active)' : '';
 
     document.getElementById('eraserSizePicker').disabled = !eraserMode;
     document.getElementById('eraserSizePicker').style.opacity = eraserMode ? 1 : 0.5;
