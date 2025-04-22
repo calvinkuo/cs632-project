@@ -268,7 +268,9 @@ function confirmSaveCanvas() {
 
 function toggleHelp() {
     const helpSection = document.getElementById('helpSection');
+    const helpBtn = document.getElementById('helpBtn');
     helpSection.classList.toggle('hidden');
+    helpBtn.classList.toggle('toggled');
 }
 
 function toggleTheme() {

@@ -68,11 +68,11 @@ body {
     display: none;
 }
 
-.brushView #brushBtn, .eraserView #eraserBtn {
+.brushView #brushBtn, .eraserView #eraserBtn, #helpBtn.toggled {
     background-color: skyblue;
 }
 
-.brushView #brushBtn:active, .eraserView #eraserBtn:active {
+.brushView #brushBtn:active, .eraserView #eraserBtn:active, #helpBtn.toggled:active {
     background-color: steelblue;
 }
 
