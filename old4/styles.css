@@ -1,0 +1,150 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    background: black;
+    color: white;
+}
+
+#toolbar {
+    clear: both;
+}
+
+.toolbar {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    background: #222;
+    padding: 8px;
+    border-radius: 5px;
+    max-width: 100%;
+    flex-wrap: wrap;
+    place-items: center;
+    place-content: center;
+}
+
+.toolbar-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    min-height: 37px;
+    width: 100%;
+}
+
+.tool-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 5px;
+}
+
+.eraserView .brush, .brushView .eraser {
+    display: none;
+}
+
+.brushView #brushBtn, .eraserView #eraserBtn {
+    background-color: skyblue;
+}
+
+.brushView #brushBtn:active, .eraserView #eraserBtn:active {
+    background-color: steelblue;
+}
+
+button {
+    background-color: white;
+    color: black;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 5px;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+button:active:not(:disabled) {
+    background-color: lightgray;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+button .fas {
+    font-size: 20px;
+}
+
+canvas {
+    cursor: crosshair;
+    background: white;
+    width: 100%;
+    height: auto;
+    max-width: 1000px;
+    aspect-ratio: 10 / 6;
+}
+
+.App_title {
+    color: azure;
+    margin: 20px 0 10px;
+}
+
+.canvas-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+@media (orientation: portrait) {
+    canvas {
+        aspect-ratio: 6 / 10;
+    }
+}
+
+.indicator {
+    background-color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    min-height: 1.5em;
+    min-width: 1.5em;
+    font-size: 14px;
+    color: black;
+  }
+
+  .help {
+    margin: 20px;
+    color: white;
+    font-size: 14px;
+  }
+
+  #statusBar {
+    text-align: center;
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    color: #333;
+  }
+
+  #helpSection {
+    width: 100%;
+    max-width: 600px;
+    margin: 1rem auto;
+    padding: 1rem;
+    background: #ffffff;
+    color: #000;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+  }
